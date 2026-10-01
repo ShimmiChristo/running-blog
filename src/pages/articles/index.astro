@@ -1,0 +1,32 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../styles/global.css';
+
+const articles = (await getCollection('articles')).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const categoryLabel = { shoes: 'Shoes', merch: 'Merch', training: 'Training' };
+---
+<BaseLayout title="All answers" description="Browse practical answers about running shoes, apparel, and gear.">
+  <header class="listing-header"><p class="eyebrow">The knowledge base</p><h1>Answers for<br /><em>the next mile.</em></h1><p>Browse the guides, comparisons, and fit notes that make choosing running gear less complicated.</p></header>
+  <div class="filter-row"><span>{articles.length} published answers</span><span>Updated regularly · <a href="/">Back home ↑</a></span></div>
+  <section class="article-grid" aria-label="All articles">
+    {articles.map((article) => <a class="article-card" href={`/articles/${article.id}/`}><div class="article-meta"><span>{categoryLabel[article.data.category]}</span><span>{article.data.readingTime}</span></div><h2>{article.data.title}</h2><p>{article.data.description}</p><span class="read-link">Read the answer →</span></a>)}
+  </section>
+</BaseLayout>
+
+<style>
+  .listing-header { max-width: 700px; padding: 95px 0 65px; }
+  h1 { margin: 0 0 22px; font-size: clamp(57px, 8vw, 100px); line-height: .86; letter-spacing: -.1em; }
+  h1 em { color: var(--orange); font-family: Georgia, serif; font-weight: 400; }
+  .listing-header > p:last-child { max-width: 400px; color: var(--muted); font-size: 14px; line-height: 1.55; }
+  .filter-row { display: flex; justify-content: space-between; padding: 13px 0; border-top: 1px solid var(--ink); border-bottom: 1px solid var(--line); color: var(--muted); font: 10px 'DM Mono', monospace; }
+  .filter-row a { color: var(--ink); }
+  .article-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; padding: 30px 0 100px; }
+  .article-card { min-height: 300px; display: flex; flex-direction: column; padding: 29px; background: var(--cream); }
+  .article-card:hover { background: var(--lime); }
+  .article-meta { display: flex; justify-content: space-between; color: var(--orange); font: 10px 'DM Mono', monospace; text-transform: uppercase; }
+  .article-card h2 { margin: 65px 0 14px; font-size: 28px; line-height: 1; letter-spacing: -.07em; }
+  .article-card p { max-width: 420px; margin: 0 0 25px; color: var(--muted); font-size: 13px; line-height: 1.5; }
+  .read-link { margin-top: auto; font: 11px 'DM Mono', monospace; }
+  @media (max-width: 600px) { .listing-header { padding: 70px 0 48px; } .article-grid { grid-template-columns: 1fr; padding-bottom: 70px; } .filter-row { gap: 20px; line-height: 1.5; } .article-card h2 { margin-top: 50px; } }
+</style>

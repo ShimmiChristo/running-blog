@@ -1,0 +1,56 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  canonical?: string;
+}
+const { title, description, canonical } = Astro.props;
+const pageUrl = canonical ?? Astro.url.href;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
+    <link rel="canonical" href={pageUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <title>{title} | Stride Guide</title>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="/">stride <span>guide</span></a>
+      <nav aria-label="Main navigation">
+        <a href="/articles/">All answers</a>
+        <a href="/articles/?category=shoes">Shoes</a>
+        <a href="/articles/?category=merch">Merch</a>
+      </nav>
+      <a class="header-link" href="/articles/">Browse answers <span>↗</span></a>
+    </header>
+    <main><slot /></main>
+    <footer class="site-footer">
+      <span>© 2026 Stride Guide</span>
+      <span>Independent advice for everyday runners.</span>
+    </footer>
+  </body>
+</html>
+
+<style is:global>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+  :root { --ink: #18211d; --muted: #6a736c; --paper: #f5f4ef; --cream: #ebeae3; --line: #d8d8ce; --lime: #d9e842; --orange: #f2744b; --green: #263c34; }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: 'Space Grotesk', sans-serif; }
+  a { color: inherit; text-decoration: none; }
+  .site-header, .site-footer { max-width: 1180px; margin: auto; padding: 0 28px; }
+  .site-header { height: 86px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); }
+  .brand { font-size: 17px; font-weight: 700; letter-spacing: -.06em; }
+  .brand span { color: var(--orange); font-family: Georgia, serif; font-weight: 400; }
+  nav { display: flex; gap: 28px; color: var(--muted); font-size: 12px; }
+  nav a:hover, .header-link:hover { color: var(--orange); }
+  .header-link { font: 11px 'DM Mono', monospace; }
+  .header-link span { margin-left: 7px; color: var(--orange); }
+  .site-footer { display: flex; justify-content: space-between; padding-top: 27px; padding-bottom: 32px; color: var(--muted); font: 10px 'DM Mono', monospace; }
+  @media (max-width: 600px) { .site-header { height: 72px; padding: 0 20px; } .site-header nav { display: none; } .site-footer { display: grid; gap: 10px; padding-left: 20px; padding-right: 20px; } }
+</style>
